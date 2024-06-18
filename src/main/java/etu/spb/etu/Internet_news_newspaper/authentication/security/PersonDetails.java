@@ -1,4 +1,4 @@
-package etu.spb.etu.Internet_news_newspaper.security;
+package etu.spb.etu.Internet_news_newspaper.authentication.security;
 
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,6 +46,6 @@ public class PersonDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

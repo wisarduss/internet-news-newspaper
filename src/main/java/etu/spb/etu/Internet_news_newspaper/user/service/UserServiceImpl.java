@@ -1,6 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.user.service;
 
-import etu.spb.etu.Internet_news_newspaper.security.PersonDetails;
+import etu.spb.etu.Internet_news_newspaper.authentication.security.PersonDetails;
 import etu.spb.etu.Internet_news_newspaper.user.UserRepository;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.RequiredArgsConstructor;
