@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findAll();
     }
 
-
     @Override
     public User createUser(User user) {
         return null;

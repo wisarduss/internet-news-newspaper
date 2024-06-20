@@ -2,10 +2,10 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>User Registration</title>
+    <title>Registration</title>
 </head>
 <body>
-<h2>User Registration</h2>
+
 <form th:method="POST" th:action="@{/registration}" th:object="${user}">
     <label for="name">Введите имя пользователя: </label>
     <input type="text" th:field="*{name}" id="name"/>
