@@ -1,13 +1,13 @@
 package etu.spb.etu.Internet_news_newspaper.user.mapper;
 
 
-import etu.spb.etu.Internet_news_newspaper.user.dto.UserCreateDto;
+import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class UserMapper {
-    public static User userCreateDtoToUser(UserCreateDto userCreateDto) {
+    public static User userDtoToUser(UserDto userCreateDto) {
 
         return User.builder()
                 .id(userCreateDto.getId())
@@ -18,9 +18,9 @@ public class UserMapper {
                 .build();
     }
 
-    public static UserCreateDto userToUserCreateDto(User user) {
+    public static UserDto userToUserDto(User user) {
 
-        return UserCreateDto.builder()
+        return UserDto.builder()
                 .id(user.getId())
                 .name(user.getName())
                 .surname(user.getSurname())

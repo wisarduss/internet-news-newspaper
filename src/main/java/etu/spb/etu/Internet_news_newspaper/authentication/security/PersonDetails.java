@@ -1,3 +1,4 @@
+/*
 package etu.spb.etu.Internet_news_newspaper.authentication.security;
 
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
@@ -49,3 +50,4 @@ public class PersonDetails implements UserDetails {
         return true;
     }
 }
+*/

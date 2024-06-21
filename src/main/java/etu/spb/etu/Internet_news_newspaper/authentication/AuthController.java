@@ -1,8 +1,8 @@
+/*
 package etu.spb.etu.Internet_news_newspaper.authentication;
 
 import etu.spb.etu.Internet_news_newspaper.authentication.service.AuthenticationService;
-import etu.spb.etu.Internet_news_newspaper.user.dto.UserCreateDto;
-import etu.spb.etu.Internet_news_newspaper.user.model.User;
+import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -27,12 +27,12 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("user") UserCreateDto userCreateDto) {
+    public String registrationPage(@ModelAttribute("user") UserDto userCreateDto) {
         return "registration";
     }
 
     @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("user") @Valid UserCreateDto userCreateDto,
+    public String performRegistration(@ModelAttribute("user") @Valid UserDto userCreateDto,
                                       BindingResult bindingResult) {
 
         userValidator.validate(userCreateDto, bindingResult);
@@ -46,3 +46,4 @@ public class AuthController {
          return "redirect:/login";
     }
 }
+*/

@@ -1,8 +1,8 @@
 package etu.spb.etu.Internet_news_newspaper.post.model;
 
-import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -10,12 +10,20 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
+@Entity
+@Table(name = "posts")
 public class Post {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "title")
     private String title;
+    @Column(name = "description")
     private String description;
+    @Column(name = "photo_URL")
     private String photoURL;
-    private LocalDateTime publicationTime = LocalDateTime.now();
-    private User owner;
+    private final LocalDateTime created = LocalDateTime.now();
+    @Column(name = "user_id")
+    private Long userId;
 }

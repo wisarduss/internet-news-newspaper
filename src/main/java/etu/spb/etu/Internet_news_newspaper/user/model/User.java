@@ -14,20 +14,16 @@ import javax.validation.constraints.NotBlank;
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
-    @NotBlank
     private String name;
     @Column(name = "surname")
-    @NotBlank
     private String surname;
     @Column(name = "email")
-    @NotBlank
-    @Email
     private String email;
     @Column(name = "password")
-    @NotBlank
     private String password;
 }

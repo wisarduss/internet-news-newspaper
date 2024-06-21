@@ -1,7 +1,8 @@
+/*
 package etu.spb.etu.Internet_news_newspaper.util;
 
 
-import etu.spb.etu.Internet_news_newspaper.user.dto.UserCreateDto;
+import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,12 +17,12 @@ public class UserValidator implements Validator {
     private final UserServiceImpl userService;
     @Override
     public boolean supports(Class<?> aClass) {
-        return UserCreateDto.class.equals(aClass);
+        return UserDto.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        UserCreateDto userCreateDto= (UserCreateDto) o;
+        UserDto userCreateDto= (UserDto) o;
         try {
             userService.loadUserByUsername(userCreateDto.getEmail());
         } catch (UsernameNotFoundException ignored) {
@@ -32,3 +33,4 @@ public class UserValidator implements Validator {
     }
 
 }
+*/

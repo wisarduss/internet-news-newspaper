@@ -1,7 +1,8 @@
+/*
 package etu.spb.etu.Internet_news_newspaper.authentication.service;
 
 import etu.spb.etu.Internet_news_newspaper.user.UserRepository;
-import etu.spb.etu.Internet_news_newspaper.user.dto.UserCreateDto;
+import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,8 +18,9 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
     @Override
     @Transactional
-    public void register(UserCreateDto userCreateDto) {
+    public void register(UserDto userCreateDto) {
         userCreateDto.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
-        userRepository.save(UserMapper.userCreateDtoToUser(userCreateDto));
+        userRepository.save(UserMapper.userDtoToUser(userCreateDto));
     }
 }
+*/

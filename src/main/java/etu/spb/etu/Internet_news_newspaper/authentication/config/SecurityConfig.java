@@ -1,3 +1,4 @@
+/*
 package etu.spb.etu.Internet_news_newspaper.authentication.config;
 
 import etu.spb.etu.Internet_news_newspaper.user.service.UserServiceImpl;
@@ -46,3 +47,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 }
+*/
