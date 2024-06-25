@@ -1,4 +1,3 @@
-/*
 package etu.spb.etu.Internet_news_newspaper.authentication;
 
 import etu.spb.etu.Internet_news_newspaper.authentication.service.AuthenticationService;
@@ -46,4 +45,3 @@ public class AuthController {
          return "redirect:/login";
     }
 }
-*/

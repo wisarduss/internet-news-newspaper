@@ -1,9 +1,12 @@
 package etu.spb.etu.Internet_news_newspaper.post.mapper;
 
+import etu.spb.etu.Internet_news_newspaper.post.dto.CommentDto;
 import etu.spb.etu.Internet_news_newspaper.post.dto.PostDto;
+import etu.spb.etu.Internet_news_newspaper.post.dto.PostFullDto;
 import etu.spb.etu.Internet_news_newspaper.post.model.Post;
-import etu.spb.etu.Internet_news_newspaper.post.model.PostUpdateDto;
 import lombok.experimental.UtilityClass;
+
+import java.util.List;
 
 @UtilityClass
 public class PostMapper {
@@ -31,11 +34,15 @@ public class PostMapper {
                 .build();
     }
 
-/*    public static PostUpdateDto postToPostUpdateDto(Post post) {
-        return PostUpdateDto.builder()
+    public static PostFullDto postToPostFullDto(Post post, List<CommentDto> comments) {
+
+        return PostFullDto.builder()
+                .id(post.getId())
                 .title(post.getTitle())
                 .description(post.getDescription())
-                .photoURL(post.getPhotoURL())
+                .userId(post.getUserId())
+                .created(post.getCreated())
+                .comments(comments)
                 .build();
-    }*/
+    }
 }

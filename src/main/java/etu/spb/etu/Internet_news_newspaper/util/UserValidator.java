@@ -1,4 +1,3 @@
-/*
 package etu.spb.etu.Internet_news_newspaper.util;
 
 
@@ -22,7 +21,7 @@ public class UserValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
-        UserDto userCreateDto= (UserDto) o;
+        UserDto userCreateDto = (UserDto) o;
         try {
             userService.loadUserByUsername(userCreateDto.getEmail());
         } catch (UsernameNotFoundException ignored) {
@@ -33,4 +32,3 @@ public class UserValidator implements Validator {
     }
 
 }
-*/

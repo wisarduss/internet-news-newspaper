@@ -17,4 +17,16 @@ CREATE TABLE IF NOT EXISTS posts
     user_id         BIGINT
 );
 
+CREATE TABLE IF NOT EXISTS comments
+(
+    id                  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    text                varchar(255),
+    post_id             bigint,
+    user_id             bigint,
+    created_comment     timestamp without time zone,
+    CONSTRAINT fk_comments_to_posts FOREIGN KEY (post_id) REFERENCES posts (id),
+    CONSTRAINT fk_comments_to_users FOREIGN KEY (user_id) REFERENCES users (id),
+    UNIQUE (id)
+);
+
 

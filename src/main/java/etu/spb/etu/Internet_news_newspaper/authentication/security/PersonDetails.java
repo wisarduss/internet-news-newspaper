@@ -1,12 +1,13 @@
-/*
 package etu.spb.etu.Internet_news_newspaper.authentication.security;
 
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Data
 public class PersonDetails implements UserDetails {
 
     private final User user;
@@ -50,4 +51,3 @@ public class PersonDetails implements UserDetails {
         return true;
     }
 }
-*/

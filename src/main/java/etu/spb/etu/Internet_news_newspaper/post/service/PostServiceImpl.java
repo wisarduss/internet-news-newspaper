@@ -1,15 +1,24 @@
 package etu.spb.etu.Internet_news_newspaper.post.service;
 
+import etu.spb.etu.Internet_news_newspaper.authentication.security.PersonDetails;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
-import etu.spb.etu.Internet_news_newspaper.post.PostRepository;
-import etu.spb.etu.Internet_news_newspaper.post.dto.PostDto;
+import etu.spb.etu.Internet_news_newspaper.post.dto.*;
+import etu.spb.etu.Internet_news_newspaper.post.mapper.CommentMapper;
+import etu.spb.etu.Internet_news_newspaper.post.model.Comment;
+import etu.spb.etu.Internet_news_newspaper.post.repository.CommentRepository;
+import etu.spb.etu.Internet_news_newspaper.post.repository.PostRepository;
 import etu.spb.etu.Internet_news_newspaper.post.mapper.PostMapper;
 import etu.spb.etu.Internet_news_newspaper.post.model.Post;
-import etu.spb.etu.Internet_news_newspaper.post.model.PostUpdateDto;
 import etu.spb.etu.Internet_news_newspaper.user.UserRepository;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +26,7 @@ public class PostServiceImpl implements PostService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     @Override
     public PostDto createPost(PostDto postDto) {
@@ -28,10 +38,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto getById(Long id) {
+    public PostFullDto getById(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
-        return PostMapper.postToPostDto(post);
+
+        List<Comment> comments = commentRepository.findAllByPostId(post.getId());
+        List<CommentDto> commentsDto = comments.stream()
+                .map(CommentMapper::commentToCommentDTO)
+                .collect(Collectors.toList());
+        return PostMapper.postToPostFullDto(post,commentsDto);
     }
 
     @Override
@@ -50,5 +65,32 @@ public class PostServiceImpl implements PostService {
         }
 
         return PostMapper.postToPostDto(postRepository.save(post));
+    }
+
+    @Override
+    public List<PostDto> getThreeLastPosts(Pageable pageable) {
+        List<Post> result = postRepository.findTop3ByOrderByCreatedDesc(pageable);
+        return result.stream()
+                .map(PostMapper::postToPostDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId) {
+      //  Long userId = ((PersonDetails) authentication.getPrincipal()).getUser().getId();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IdNotFoundException("Вещь с id = " + postId + " не найдена"));
+
+
+        Comment comment = commentRepository.save(Comment.builder()
+                .text(text.getText())
+                .post(post)
+                .user(user)
+                .build());
+        return CommentMapper.commentToCommentDTO(comment);
     }
 }

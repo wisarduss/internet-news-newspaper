@@ -1,4 +1,4 @@
-package etu.spb.etu.Internet_news_newspaper.post.model;
+package etu.spb.etu.Internet_news_newspaper.post.dto;
 
 import lombok.Builder;
 import lombok.Data;
