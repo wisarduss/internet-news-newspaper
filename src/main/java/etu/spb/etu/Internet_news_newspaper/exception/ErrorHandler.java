@@ -31,4 +31,11 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleObjectDoesNotExistException(final AlreadyExistException e) {
+        log.debug("Получен статус 500 internal server error found {}", e.getMessage());
+        return new ErrorResponse(e.getMessage());
+    }
+
 }

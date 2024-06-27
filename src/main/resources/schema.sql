@@ -29,4 +29,11 @@ CREATE TABLE IF NOT EXISTS comments
     UNIQUE (id)
 );
 
+CREATE TABLE IF NOT EXISTS likes
+(
+    id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id     BIGINT,
+    post_id     BIGINT
+);
+
 

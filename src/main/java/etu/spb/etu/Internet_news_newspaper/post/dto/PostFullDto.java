@@ -1,5 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.post.dto;
 
+import etu.spb.etu.Internet_news_newspaper.like.Like;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,4 +24,5 @@ public class PostFullDto {
     @NotNull
     private Long userId;
     private List<CommentDto> comments;
+    private List<Like> likes;
 }

@@ -1,6 +1,8 @@
 package etu.spb.etu.Internet_news_newspaper.post;
 
 import etu.spb.etu.Internet_news_newspaper.authentication.security.PersonDetails;
+import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.service.LikeService;
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
 import etu.spb.etu.Internet_news_newspaper.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final LikeService likeService;
 
     @PostMapping
     public PostDto create(@RequestBody PostDto postDto) {
@@ -50,6 +53,16 @@ public class PostController {
             @PathVariable Long userId) {
 
         return postService.makeComment(postId, text, userId);
+    }
+
+    @PostMapping("/like")
+    public Like like(@RequestBody Like like) {
+        return likeService.create(like);
+    }
+
+    @DeleteMapping("/like/{likeId}")
+    public void deleteLike(@PathVariable Long likeId) {
+        likeService.deleteLike(likeId);
     }
 
 
