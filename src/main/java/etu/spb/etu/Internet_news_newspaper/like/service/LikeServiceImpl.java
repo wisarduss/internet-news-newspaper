@@ -1,6 +1,5 @@
 package etu.spb.etu.Internet_news_newspaper.like.service;
 
-
 import etu.spb.etu.Internet_news_newspaper.exception.AlreadyExistException;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
 import etu.spb.etu.Internet_news_newspaper.like.Like;

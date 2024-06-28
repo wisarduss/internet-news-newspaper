@@ -1,14 +1,10 @@
 package etu.spb.etu.Internet_news_newspaper.post;
 
-import etu.spb.etu.Internet_news_newspaper.authentication.security.PersonDetails;
 import etu.spb.etu.Internet_news_newspaper.like.Like;
 import etu.spb.etu.Internet_news_newspaper.like.service.LikeService;
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
 import etu.spb.etu.Internet_news_newspaper.post.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,12 +34,8 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostDto> getThreeLastPosts(
-            @RequestParam(required = false, defaultValue = "0") final Integer from,
-            @RequestParam(required = false, defaultValue = "3") final Integer size) {
-
-       return postService.getThreeLastPosts(PageRequest.of(from,size));
-
+    public List<PostFullDto> getPosts() {
+       return postService.getPosts();
     }
 
     @PostMapping("/{postId}/comment/{userId}")

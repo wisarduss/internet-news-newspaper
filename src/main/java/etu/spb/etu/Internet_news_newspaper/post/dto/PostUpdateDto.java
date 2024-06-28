@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Builder(toBuilder = true)
 public class PostUpdateDto {
+    private Long id;
     @NotBlank
     private String title;
     @NotBlank

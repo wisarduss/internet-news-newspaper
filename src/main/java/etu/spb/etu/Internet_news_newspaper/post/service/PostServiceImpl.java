@@ -1,5 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.post.service;
 
+import etu.spb.etu.Internet_news_newspaper.exception.EmptyPostsException;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
 import etu.spb.etu.Internet_news_newspaper.like.Like;
 import etu.spb.etu.Internet_news_newspaper.like.LikeRepository;
@@ -13,11 +14,16 @@ import etu.spb.etu.Internet_news_newspaper.post.model.Post;
 import etu.spb.etu.Internet_news_newspaper.user.UserRepository;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static etu.spb.etu.Internet_news_newspaper.util.Constants.TWENTY_FOR_HOURS;
 
 @Service
 @RequiredArgsConstructor
@@ -52,8 +58,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto update(PostUpdateDto postUpdateDto, Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+        Post post = postRepository.getById(id);
 
         if (postUpdateDto.getTitle() != null) {
             post.setTitle(postUpdateDto.getTitle());
@@ -69,11 +74,29 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getThreeLastPosts(Pageable pageable) {
-        List<Post> result = postRepository.findTop3ByOrderByCreatedDesc(pageable);
-        return result.stream()
-                .map(PostMapper::postToPostDto)
-                .collect(Collectors.toList());
+    public List<PostFullDto> getPosts() {
+        LocalDateTime startTime = LocalDateTime.now().minus(24, ChronoUnit.HOURS);
+        List<Post> posts = postRepository.findLatestPosts(startTime);
+        List<CommentDto> comments;
+        List<Like> likes;
+        List<PostFullDto> fullPosts = new ArrayList<>();
+
+        if (posts.size() == 0) {
+            throw new EmptyPostsException("К сожалению, за последнее день никто не выкладывал посты");
+        }
+
+        for (Post post : posts) {
+             comments = commentRepository.findAllByPostId(post.getId()).stream()
+                    .map(CommentMapper::commentToCommentDTO)
+                    .collect(Collectors.toList());
+
+             likes = likeRepository.findAllByPostId(post.getId());
+
+             fullPosts.add(PostMapper.postToPostFullDto(post,comments,likes));
+        }
+
+        return fullPosts;
+
     }
 
     @Override

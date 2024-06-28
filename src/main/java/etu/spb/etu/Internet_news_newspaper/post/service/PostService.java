@@ -14,7 +14,7 @@ public interface PostService {
 
     PostDto update(PostUpdateDto postUpdateDto, Long id);
 
-    List<PostDto> getThreeLastPosts(Pageable pageable);
+    List<PostFullDto> getPosts();
 
     CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId);
 }

@@ -3,8 +3,6 @@ package etu.spb.etu.Internet_news_newspaper.user.model;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter

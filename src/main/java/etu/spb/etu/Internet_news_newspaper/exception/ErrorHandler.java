@@ -38,4 +38,11 @@ public class ErrorHandler {
         return new ErrorResponse(e.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EmptyPostsException.class)
+    public ErrorResponse handleValidationExceptions(EmptyPostsException ex) {
+        log.debug("Получен статус 404 not found {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
+
+    }
 }
