@@ -37,7 +37,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDto createPost(PostDto postDto) {
         Post post = PostMapper.postDtoToPost(postDto);
-        User postUser = userRepository.findById(post.getUserId())
+        userRepository.findById(post.getUserId())
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + postDto.getUserId() + " не найден"));
 
         return PostMapper.postToPostDto(postRepository.save(post));
@@ -58,7 +58,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto update(PostUpdateDto postUpdateDto, Long id) {
-        Post post = postRepository.getById(id);
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
 
         if (postUpdateDto.getTitle() != null) {
             post.setTitle(postUpdateDto.getTitle());
@@ -75,13 +76,13 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostFullDto> getPosts() {
-        LocalDateTime startTime = LocalDateTime.now().minus(24, ChronoUnit.HOURS);
+        LocalDateTime startTime = LocalDateTime.now().minusHours(24);
         List<Post> posts = postRepository.findLatestPosts(startTime);
         List<CommentDto> comments;
         List<Like> likes;
         List<PostFullDto> fullPosts = new ArrayList<>();
 
-        if (posts.size() == 0) {
+        if (posts.isEmpty()) {
             throw new EmptyPostsException("К сожалению, за последнее день никто не выкладывал посты");
         }
 
