@@ -1,24 +1,16 @@
-package etu.spb.etu.Internet_news_newspaper.user.dto;
+package etu.spb.etu.Internet_news_newspaper.authentication.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder(toBuilder = true)
-public class UserDto {
-    private Long id;
-    @NotBlank
-    private String name;
-    @NotBlank
-    private String surname;
+public class AuthenticationDto {
+
     @NotBlank
     @Email
     private String email;

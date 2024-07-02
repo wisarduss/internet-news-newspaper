@@ -1,6 +1,5 @@
 package etu.spb.etu.Internet_news_newspaper.user.mapper;
 
-
 import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.experimental.UtilityClass;

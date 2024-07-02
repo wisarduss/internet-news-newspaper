@@ -1,9 +1,9 @@
 package etu.spb.etu.Internet_news_newspaper.util;
 
-
 import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
 import etu.spb.etu.Internet_news_newspaper.user.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -16,7 +16,7 @@ public class UserValidator implements Validator {
     private final UserServiceImpl userService;
     @Override
     public boolean supports(Class<?> aClass) {
-        return UserDto.class.equals(aClass);
+        return User.class.equals(aClass);
     }
 
     @Override

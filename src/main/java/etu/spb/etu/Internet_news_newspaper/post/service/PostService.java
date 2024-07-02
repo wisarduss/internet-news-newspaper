@@ -1,8 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.post.service;
 
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 
 import java.util.List;
 

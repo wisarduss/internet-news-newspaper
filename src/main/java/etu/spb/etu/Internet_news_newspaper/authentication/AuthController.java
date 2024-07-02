@@ -2,24 +2,27 @@ package etu.spb.etu.Internet_news_newspaper.authentication;
 
 import etu.spb.etu.Internet_news_newspaper.authentication.service.AuthenticationService;
 import etu.spb.etu.Internet_news_newspaper.user.dto.UserDto;
+import etu.spb.etu.Internet_news_newspaper.user.mapper.UserMapper;
+import etu.spb.etu.Internet_news_newspaper.user.model.User;
+import etu.spb.etu.Internet_news_newspaper.util.JWTUtil;
 import etu.spb.etu.Internet_news_newspaper.util.UserValidator;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping
 @RequiredArgsConstructor
 public class AuthController {
 
     private final UserValidator userValidator;
     private final AuthenticationService authenticationService;
+    private final JWTUtil jwtUtil;
+
     @GetMapping("/login")
     public String loginPage() {
         return "login";
@@ -31,17 +34,21 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("user") @Valid UserDto userCreateDto,
-                                      BindingResult bindingResult) {
+    public Map<String, String> performRegistration(@RequestBody @Valid UserDto userCreateDto,
+                                                   BindingResult bindingResult) {
 
         userValidator.validate(userCreateDto, bindingResult);
 
+        User user = UserMapper.userDtoToUser(userCreateDto);
+
         if (bindingResult.hasErrors()) {
-            return "/registration";
+           return Collections.singletonMap("message", "Ошибка!");
         }
 
-        authenticationService.register(userCreateDto);
+        authenticationService.register(user);
 
-         return "redirect:/login";
+        String token = jwtUtil.generateToken(user.getEmail());
+        return Collections.singletonMap("jwt-token", token);
     }
+
 }

@@ -17,13 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static etu.spb.etu.Internet_news_newspaper.util.Constants.TWENTY_FOR_HOURS;
 
 @Service
 @RequiredArgsConstructor

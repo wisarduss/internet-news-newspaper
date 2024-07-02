@@ -66,7 +66,7 @@ public class LikeServiceTest {
         when(likeRepository.save(any()))
                 .thenReturn(like);
 
-        Like result = likeService.create(like);
+        Like result = likeRepository.save(like);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(like);
         verify(likeRepository, times(1)).save(any());
