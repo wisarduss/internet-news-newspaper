@@ -34,7 +34,7 @@ public class UserServiceTest {
     void findAll() {
         UserDto user = UserDto.builder()
                 .id(1L)
-                .name("test")
+                .name("tests")
                 .surname("test")
                 .password("12345")
                 .email("test@test.com")
