@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  server:
+    build: ./server
+    restart: on-failure
+    container_name: news_newspaper-server
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/news_newspaper
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SERVER_PORT=8080
+
+  db:
+    image: postgres:13.7-alpine
+    container_name: new_newspaper_db
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_DB=news_newspaper
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
