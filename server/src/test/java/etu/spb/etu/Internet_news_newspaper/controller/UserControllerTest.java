@@ -1,6 +1,5 @@
 package etu.spb.etu.Internet_news_newspaper.controller;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import etu.spb.etu.Internet_news_newspaper.exception.ErrorHandler;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;

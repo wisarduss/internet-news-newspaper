@@ -23,7 +23,6 @@ public class ErrorHandler {
         return errorResponse;
     }
 
-
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(IdNotFoundException.class)
     public ErrorResponse handleValidationExceptions(IdNotFoundException ex) {
@@ -51,4 +50,5 @@ public class ErrorHandler {
         log.debug("Получен статус 409 conflict {}", ex.getMessage());
         return new ErrorResponse(ex.getMessage());
     }
+
 }

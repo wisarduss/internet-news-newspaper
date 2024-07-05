@@ -1,14 +1,12 @@
 package etu.spb.etu.Internet_news_newspaper.authentication.config;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import etu.spb.etu.Internet_news_newspaper.user.service.UserService;
 import etu.spb.etu.Internet_news_newspaper.user.service.UserServiceImpl;
 import etu.spb.etu.Internet_news_newspaper.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 

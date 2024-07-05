@@ -30,16 +30,6 @@ public class AuthController {
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-/*    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
-    @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("user") UserDto userCreateDto) {
-        return "registration";
-    }*/
-
     @PostMapping("/registration")
     public Map<String, String> performRegistration(@RequestBody @Valid UserDto userCreateDto,
                                                    BindingResult bindingResult) {
