@@ -1,7 +1,7 @@
 # Новостная интернет газета
 
 ## 1. Сборка проекта
-1. Собрать .jar проекта mvn clean package
+1. Собрать .jar проекта mvn clean install
 2. Запустить приложение в контейнере docker-compose up -d
 
 ## 2. Получение и работа с JWT токеном
@@ -16,6 +16,14 @@
        "password": "12345"
      }
 
+После окончания жизни токена сделать запрос в Postman "http://localhost:8080/registration"
+    
+    
+      {
+       "email": "Borodulin@mail.ru",
+       "password": "12345"
+     }
+     
 
 - Полученный JWT токен вставляем в header Authorization: Bearer JWT token
 
@@ -34,6 +42,3 @@
 
 ## 6. Используемые технологии для запуска
 - Docker
-
-## 7. Тестирование эндпоинтов
-- Postman(в директории postman лежит скрипт, который нужно импортировать в postman)
