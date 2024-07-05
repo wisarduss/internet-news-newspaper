@@ -43,6 +43,12 @@ public class ErrorHandler {
     public ErrorResponse handleValidationExceptions(EmptyPostsException ex) {
         log.debug("Получен статус 404 not found {}", ex.getMessage());
         return new ErrorResponse(ex.getMessage());
+    }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(NotOwnerException.class)
+    public ErrorResponse handleValidationExceptions(NotOwnerException ex) {
+        log.debug("Получен статус 409 conflict {}", ex.getMessage());
+        return new ErrorResponse(ex.getMessage());
     }
 }

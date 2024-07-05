@@ -38,6 +38,11 @@ public class PostController {
        return postService.getPosts();
     }
 
+    @DeleteMapping("/{id}/{userId}")
+    public void deletePosts(@PathVariable Long id, @PathVariable Long userId) {
+        postService.deletePost(id, userId);
+    }
+
     @PostMapping("/{postId}/comment/{userId}")
     public CommentDto comment(
             @PathVariable Long postId,
@@ -47,14 +52,19 @@ public class PostController {
         return postService.makeComment(postId, text, userId);
     }
 
+    @DeleteMapping("/comment/{commentId}/{userId}")
+    void deleteComment(@PathVariable Long commentId, @PathVariable Long userId) {
+        postService.deleteComment(commentId, userId);
+    }
+
     @PostMapping("/like")
     public Like like(@RequestBody Like like) {
         return likeService.create(like);
     }
 
-    @DeleteMapping("/like/{likeId}")
-    public void deleteLike(@PathVariable Long likeId) {
-        likeService.deleteLike(likeId);
+    @DeleteMapping("/like/{likeId}/{userId}")
+    public void deleteLike(@PathVariable Long likeId, @PathVariable Long userId) {
+        likeService.deleteLike(likeId, userId);
     }
 
 

@@ -2,6 +2,7 @@ package etu.spb.etu.Internet_news_newspaper.post.service;
 
 import etu.spb.etu.Internet_news_newspaper.exception.EmptyPostsException;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
+import etu.spb.etu.Internet_news_newspaper.exception.NotOwnerException;
 import etu.spb.etu.Internet_news_newspaper.like.Like;
 import etu.spb.etu.Internet_news_newspaper.like.LikeRepository;
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -98,6 +100,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public void deletePost(Long id, Long userId) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+
+        if (!Objects.equals(post.getUserId(), userId)) {
+            throw new NotOwnerException("Только пользователь может удалить пост," +
+                    " пользователь с id =" + userId + " не является пользователем поста");
+        }
+
+        postRepository.deleteById(id);
+    }
+
+    @Override
     public CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId) {
 
         User user = userRepository.findById(userId)
@@ -114,4 +129,21 @@ public class PostServiceImpl implements PostService {
                 .build());
         return CommentMapper.commentToCommentDTO(comment);
     }
+
+    @Override
+    public void deleteComment(Long commentId, Long userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IdNotFoundException("Коммент с id = " + commentId + " не найден"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
+
+        if (!Objects.equals(comment.getUser().getName(), user.getName())) {
+            throw new NotOwnerException("Пользователь с id = " + userId + " не является владельцем комментария," +
+                    "комментарий может только удалить пользователь");
+        }
+        commentRepository.deleteById(commentId);
+    }
+
+
 }

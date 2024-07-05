@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +45,52 @@ public class PostServiceTest {
 
     @Autowired
     private PostService postService;
+
+
+
+    @Test
+    void createPost() {
+
+        User user = User.builder()
+                .id(1L)
+                .name("max")
+                .surname("Borodulin")
+                .email("max@mail.ru")
+                .password("12345")
+                .build();
+
+        PostDto postDto = PostDto.builder()
+                .id(1L)
+                .title("test")
+                .description("test")
+                .photoURL("photoUrl")
+                .created(LocalDateTime.now())
+                .userId(1L)
+                .build();
+
+
+        Post post = Post.builder()
+                .id(1L)
+                .title("test")
+                .description("test")
+                .photoURL("photoUrl")
+                .userId(1L)
+                .build();
+
+        when(userRepository.findById(1L))
+                .thenReturn(Optional.of(user));
+        when(postRepository.save(any()))
+                .thenReturn(post);
+
+        PostDto result = postService.createPost(postDto);
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(post.getId());
+        assertThat(result.getDescription()).isEqualTo(post.getDescription());
+        assertThat(result.getCreated()).isEqualTo(post.getCreated());
+
+        verify(userRepository, times(1)).findById(any());
+        verify(postRepository, times(1)).save(any());
+    }
 
 
     @Test
@@ -137,7 +184,46 @@ public class PostServiceTest {
         verify(postRepository, times(1)).save(any());
     }
 
+    @Test
+    void deletePost() {
 
+        User user = User.builder()
+                .id(1L)
+                .name("max")
+                .surname("Borodulin")
+                .email("max@mail.ru")
+                .password("12345")
+                .build();
+
+        PostDto postDto = PostDto.builder()
+                .id(1L)
+                .title("test")
+                .description("test")
+                .photoURL("photoUrl")
+                .created(LocalDateTime.now())
+                .userId(1L)
+                .build();
+
+
+        Post post = Post.builder()
+                .id(1L)
+                .title("test")
+                .description("test")
+                .photoURL("photoUrl")
+                .userId(1L)
+                .build();
+
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user));
+        when(postRepository.findById(anyLong()))
+                .thenReturn(Optional.of(post));
+        when(postRepository.save(any()))
+                .thenReturn(post);
+
+        postService.deletePost(1L, 1L);
+        verify(postRepository, times(1)).findById(anyLong());
+
+    }
 
     @Test
     void comment() {
@@ -194,6 +280,41 @@ public class PostServiceTest {
         assertThrows(IdNotFoundException.class, () -> postService.getById(1L));
         verify(postRepository, times(1)).findById(anyLong());
 
+    }
+
+    @Test
+    void deleteComment() {
+        User user = User.builder()
+                .id(1L)
+                .name("test")
+                .surname("test")
+                .password("12345")
+                .email("test@test.com")
+                .build();
+
+        Post post = Post.builder()
+                .id(1L)
+                .title("title")
+                .description("description")
+                .photoURL("test")
+                .userId(user.getId())
+                .build();
+
+        Comment comment = Comment.builder()
+                .id(1L)
+                .text("test")
+                .user(user)
+                .build();
+
+        when(commentRepository.findById(anyLong()))
+                .thenReturn(Optional.of(comment));
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user));
+
+        postService.deleteComment(1L,1L);
+
+        verify(commentRepository, times(1)).findById(anyLong());
+        verify(userRepository, times(1)).findById(anyLong());
     }
 
 }

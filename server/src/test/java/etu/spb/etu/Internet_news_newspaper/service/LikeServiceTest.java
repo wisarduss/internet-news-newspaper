@@ -84,7 +84,7 @@ public class LikeServiceTest {
         when(likeRepository.findById(anyLong()))
                 .thenReturn(Optional.of(like));
 
-        likeService.deleteLike(1L);
+        likeService.deleteLike(1L, 1L);
         verify(likeRepository, times(1)).deleteById(anyLong());
     }
 }

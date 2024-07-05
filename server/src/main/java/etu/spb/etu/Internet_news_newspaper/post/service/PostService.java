@@ -14,5 +14,9 @@ public interface PostService {
 
     List<PostFullDto> getPosts();
 
+    void deletePost(Long id, Long userId);
+
     CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId);
+
+    void deleteComment(Long commentId, Long userId);
 }

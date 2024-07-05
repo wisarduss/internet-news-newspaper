@@ -7,11 +7,11 @@ import etu.spb.etu.Internet_news_newspaper.like.Like;
 import etu.spb.etu.Internet_news_newspaper.like.service.LikeService;
 import etu.spb.etu.Internet_news_newspaper.post.PostController;
 import etu.spb.etu.Internet_news_newspaper.post.dto.CommentDto;
+import etu.spb.etu.Internet_news_newspaper.post.dto.PostDto;
 import etu.spb.etu.Internet_news_newspaper.post.dto.PostFullDto;
 import etu.spb.etu.Internet_news_newspaper.post.mapper.PostMapper;
 import etu.spb.etu.Internet_news_newspaper.post.model.Post;
 import etu.spb.etu.Internet_news_newspaper.post.service.PostService;
-import lombok.With;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,4 +203,33 @@ public class PostControllerTest {
 
         response.andExpect(status().is2xxSuccessful());
     }
+
+    @Test
+    @WithMockUser
+    void createPost() throws Exception {
+        PostDto postDto = PostDto.builder()
+                .id(1L)
+                .title("title")
+                .description("description")
+                .photoURL("test")
+                .created(LocalDateTime.now())
+                .userId(1L)
+                .build();
+
+        Post post = Post.builder()
+                .id(1L)
+                .title("title")
+                .description("description")
+                .photoURL("test")
+                .userId(1L)
+                .build();
+
+        when(postService.createPost(postDto))
+                .thenReturn(postDto);
+
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.get(URL));
+
+        response.andExpect(status().is2xxSuccessful());
+    }
+
 }
