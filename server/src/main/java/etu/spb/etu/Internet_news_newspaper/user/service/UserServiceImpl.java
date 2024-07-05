@@ -39,12 +39,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return UserMapper.userToUserDto(user);
     }
 
-    @Override
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
-
-
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(s);
 

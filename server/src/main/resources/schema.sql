@@ -33,7 +33,10 @@ CREATE TABLE IF NOT EXISTS likes
 (
     id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id     BIGINT,
-    post_id     BIGINT
+    post_id     BIGINT,
+    CONSTRAINT fk_likes_to_posts FOREIGN KEY (post_id) REFERENCES posts (id),
+    CONSTRAINT fk_likes_to_users FOREIGN KEY (user_id) REFERENCES users (id),
+    UNIQUE (id)
 );
 
 
