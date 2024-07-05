@@ -3,7 +3,7 @@ package etu.spb.etu.Internet_news_newspaper.post.service;
 import etu.spb.etu.Internet_news_newspaper.exception.EmptyPostsException;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
 import etu.spb.etu.Internet_news_newspaper.exception.NotOwnerException;
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import etu.spb.etu.Internet_news_newspaper.like.LikeRepository;
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
 import etu.spb.etu.Internet_news_newspaper.post.mapper.CommentMapper;
@@ -15,6 +15,7 @@ import etu.spb.etu.Internet_news_newspaper.post.model.Post;
 import etu.spb.etu.Internet_news_newspaper.user.UserRepository;
 import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PostServiceImpl implements PostService {
 
     private final UserRepository userRepository;
@@ -38,7 +40,7 @@ public class PostServiceImpl implements PostService {
         Post post = PostMapper.postDtoToPost(postDto);
         userRepository.findById(post.getUserId())
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + postDto.getUserId() + " не найден"));
-
+        log.debug("Пост создан");
         return PostMapper.postToPostDto(postRepository.save(post));
     }
 
@@ -52,13 +54,19 @@ public class PostServiceImpl implements PostService {
                 .map(CommentMapper::commentToCommentDTO)
                 .collect(Collectors.toList());
         List<Like> likes = likeRepository.findAllByPostId(post.getId());
+        log.debug("Пост полчен");
         return PostMapper.postToPostFullDto(post,commentsDto, likes);
     }
 
     @Override
-    public PostDto update(PostUpdateDto postUpdateDto, Long id) {
+    public PostDto update(PostUpdateDto postUpdateDto, Long id, Long userId) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+
+        if (!Objects.equals(post.getUserId(), userId)) {
+            throw new NotOwnerException("Пост может изменить владелец," +
+                    " пользователь с id = " + userId + " не является владельцем");
+        }
 
         if (postUpdateDto.getTitle() != null) {
             post.setTitle(postUpdateDto.getTitle());
@@ -69,7 +77,7 @@ public class PostServiceImpl implements PostService {
         if (postUpdateDto.getPhotoURL() != null) {
             post.setPhotoURL(postUpdateDto.getPhotoURL());
         }
-
+        log.debug("пост обновлен");
         return PostMapper.postToPostDto(postRepository.save(post));
     }
 
@@ -94,7 +102,7 @@ public class PostServiceImpl implements PostService {
 
              fullPosts.add(PostMapper.postToPostFullDto(post,comments,likes));
         }
-
+        log.debug("Получены посты за 24 часа");
         return fullPosts;
 
     }
@@ -108,7 +116,7 @@ public class PostServiceImpl implements PostService {
             throw new NotOwnerException("Только пользователь может удалить пост," +
                     " пользователь с id =" + userId + " не является пользователем поста");
         }
-
+        log.debug("Пост удален");
         postRepository.deleteById(id);
     }
 
@@ -127,6 +135,7 @@ public class PostServiceImpl implements PostService {
                 .post(post)
                 .user(user)
                 .build());
+        log.debug("клмментарий оставлен");
         return CommentMapper.commentToCommentDTO(comment);
     }
 
@@ -142,8 +151,8 @@ public class PostServiceImpl implements PostService {
             throw new NotOwnerException("Пользователь с id = " + userId + " не является владельцем комментария," +
                     "комментарий может только удалить пользователь");
         }
+        log.debug("комментарий удален");
         commentRepository.deleteById(commentId);
     }
-
 
 }

@@ -3,7 +3,7 @@ package etu.spb.etu.Internet_news_newspaper.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import etu.spb.etu.Internet_news_newspaper.exception.ErrorHandler;
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import etu.spb.etu.Internet_news_newspaper.like.service.LikeService;
 import etu.spb.etu.Internet_news_newspaper.post.PostController;
 import etu.spb.etu.Internet_news_newspaper.post.dto.CommentDto;

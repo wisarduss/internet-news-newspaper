@@ -1,6 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.post.dto;
 
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import lombok.Builder;
 import lombok.Data;
 

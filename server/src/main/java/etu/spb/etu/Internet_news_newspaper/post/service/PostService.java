@@ -10,7 +10,7 @@ public interface PostService {
 
     PostFullDto getById(Long id);
 
-    PostDto update(PostUpdateDto postUpdateDto, Long id);
+    PostDto update(PostUpdateDto postUpdateDto, Long id, Long userId);
 
     List<PostFullDto> getPosts();
 

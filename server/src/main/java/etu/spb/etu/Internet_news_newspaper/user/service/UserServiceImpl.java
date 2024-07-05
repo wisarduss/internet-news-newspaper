@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public List<UserDto> getAllUsers() {
+        log.debug("Получены все пользователи");
         return userRepository.findAll().stream()
                 .map(UserMapper::userToUserDto)
                 .collect(Collectors.toList());
@@ -34,6 +35,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDto getUserById(Long id) {
+        log.debug("Получен пользователь во id = {} ", id);
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + id + " не найден"));
         return UserMapper.userToUserDto(user);

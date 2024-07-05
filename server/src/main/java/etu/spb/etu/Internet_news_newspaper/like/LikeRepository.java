@@ -1,5 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.like;
 
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

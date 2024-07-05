@@ -1,6 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.dto;
 
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import etu.spb.etu.Internet_news_newspaper.post.dto.CommentDto;
 import etu.spb.etu.Internet_news_newspaper.post.dto.PostFullDto;
 import etu.spb.etu.Internet_news_newspaper.post.mapper.PostMapper;

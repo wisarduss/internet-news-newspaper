@@ -8,6 +8,7 @@ import etu.spb.etu.Internet_news_newspaper.user.model.User;
 import etu.spb.etu.Internet_news_newspaper.util.JWTUtil;
 import etu.spb.etu.Internet_news_newspaper.util.UserValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final UserValidator userValidator;
@@ -45,6 +47,7 @@ public class AuthController {
         authenticationService.register(user);
 
         String token = jwtUtil.generateToken(user.getEmail());
+        log.debug("Получен POST запрос на регистрацию пользователя {}", userCreateDto);
         return Collections.singletonMap("jwt-token", token);
     }
 
@@ -60,6 +63,7 @@ public class AuthController {
         }
 
         String token = jwtUtil.generateToken(authenticationDto.getEmail());
+        log.debug("Получен POST запрос на аутентификацию пользователя");
         return Collections.singletonMap("jwt-token", token);
     }
 

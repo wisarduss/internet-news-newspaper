@@ -1,4 +1,4 @@
-package etu.spb.etu.Internet_news_newspaper.like;
+package etu.spb.etu.Internet_news_newspaper.like.model;
 
 import lombok.*;
 

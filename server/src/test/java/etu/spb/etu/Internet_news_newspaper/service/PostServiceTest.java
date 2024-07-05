@@ -2,7 +2,7 @@ package etu.spb.etu.Internet_news_newspaper.service;
 
 
 import etu.spb.etu.Internet_news_newspaper.exception.IdNotFoundException;
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import etu.spb.etu.Internet_news_newspaper.like.LikeRepository;
 import etu.spb.etu.Internet_news_newspaper.post.dto.*;
 import etu.spb.etu.Internet_news_newspaper.post.model.Comment;
@@ -174,7 +174,7 @@ public class PostServiceTest {
         when(postRepository.save(any()))
                 .thenReturn(post);
 
-        PostDto result = postService.update(postUpdateDto, 1L);
+        PostDto result = postService.update(postUpdateDto, 1L, 1L);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(postUpdateDto.getId());
         assertThat(result.getTitle()).isEqualTo(postUpdateDto.getTitle());

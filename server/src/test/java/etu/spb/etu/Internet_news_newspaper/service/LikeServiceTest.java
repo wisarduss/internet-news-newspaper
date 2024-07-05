@@ -1,6 +1,6 @@
 package etu.spb.etu.Internet_news_newspaper.service;
 
-import etu.spb.etu.Internet_news_newspaper.like.Like;
+import etu.spb.etu.Internet_news_newspaper.like.model.Like;
 import etu.spb.etu.Internet_news_newspaper.like.LikeRepository;
 import etu.spb.etu.Internet_news_newspaper.like.service.LikeService;
 import etu.spb.etu.Internet_news_newspaper.post.model.Post;
