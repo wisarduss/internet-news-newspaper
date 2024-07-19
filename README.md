@@ -1,7 +1,7 @@
 # Новостная интернет газета
 
 ## 1. Сборка проекта
-1. Собрать .jar проекта mvn clean package
+1. Собрать .jar проекта mvn clean install
 2. Запустить приложение в контейнере docker-compose up -d
 
 ## 2. Получение и работа с JWT токеном
@@ -15,6 +15,14 @@
        "email": "Borodulin@mail.ru",
        "password": "12345"
      }
+
+После окончания жизни токена сделать запрос в Postman "http://localhost:8080/login"
+
+
+      {
+       "email": "Borodulin@mail.ru",
+       "password": "12345"
+      }
 
 
 - Полученный JWT токен вставляем в header Authorization: Bearer JWT token
@@ -35,5 +43,22 @@
 ## 6. Используемые технологии для запуска
 - Docker
 
-## 7. Тестирование эндпоинтов
-- Postman(в директории postman лежит скрипт, который нужно импортировать в postman)
+## 7. Прмиперы эндпоинтов для Postman
+- auth
+    - POST "http://localhost:8080/registration" - регистрация нового пользователя
+    - POST "http://localhost:8080/login" - аунтентификация пользователя
+
+- users
+    - GET "http://localhost:8080/users" - получение всех пользователей
+    - GET "http://localhost:8080/users/{id}" - получение конкретного пользователя
+
+- posts
+    - POST   "http://localhost:8080/posts" - добавление нового поста
+    - GET    "http://localhost:8080/posts/{id}" - поиск конкретного поста
+    - PATCH  "http://localhost:8080/posts/{id}/{userId}" - обновление конкретного поста
+    - GET    "http://localhost:8080/posts" - получение последних постов за 24 часа
+    - DELETE "http://localhost:8080/posts/{id}/{userId}" - удаление поста
+    - POST   "http://localhost:8080/posts/{postId}/comment/{userId}" - добавление комментария к посту
+    - DELETE "http://localhost:8080/posts/comment/{commentId}/{userId}" - удаление комментария
+    - POST   "http://localhost:8080/posts/like" - добавление лайка к посту
+    - DELETE "http://localhost:8080/posts/like/{likeId}/{userId}" - удаление лайка у поста
