@@ -1,7 +1,6 @@
 package etu.spb.etu.Internet.news.newspaper.like.controller;
 
 import etu.spb.etu.Internet.news.newspaper.like.dto.LikeDto;
-import etu.spb.etu.Internet.news.newspaper.like.model.Like;
 import etu.spb.etu.Internet.news.newspaper.like.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
