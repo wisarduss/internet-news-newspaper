@@ -3,17 +3,17 @@ services:
   client-backend:
     image: client:0.0.1
     build:
-      context: server
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - db
     environment:
-        - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/news_newspaper
-        - SPRING_DATASOURCE_USERNAME=postgres
-        - SPRING_DATASOURCE_PASSWORD=postgres
-        - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/news_newspaper
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SERVER_PORT=8080
 
   db:
     image: postgres:13.7-alpine
