@@ -14,13 +14,13 @@ public interface PostService {
 
     PostFullDto getById(Long id);
 
-    PostDto update(PostUpdateDto postUpdateDto, Long id, Long userId);
+    PostDto update(PostUpdateDto postUpdateDto, Long id);
 
     List<PostFullDto> getPosts();
 
-    void deletePost(Long id, Long userId);
+    void deletePost(Long id);
 
-    CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId);
+    CommentDto makeComment(Long postId, CommentUpdateDto text);
 
-    void deleteComment(Long commentId, Long userId);
+    void deleteComment(Long commentId);
 }

@@ -7,7 +7,14 @@ import etu.spb.etu.Internet.news.newspaper.post.dto.PostUpdateDto;
 import etu.spb.etu.Internet.news.newspaper.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import java.util.List;
 
@@ -32,11 +39,11 @@ public class PostController {
         return postService.getById(id);
     }
 
-    @PatchMapping("/{id}/{userId}")
-    public PostDto update(@RequestBody PostUpdateDto postUpdateDto, @PathVariable Long id, @PathVariable Long userId) {
+    @PatchMapping("/{id}")
+    public PostDto update(@RequestBody PostUpdateDto postUpdateDto, @PathVariable Long id) {
         log.debug("Получен PATCH запрос на обновление поста " +
-                "postDtoUpdate = {}, id = {}, userId = {}", postUpdateDto, id, userId);
-        return postService.update(postUpdateDto, id, userId);
+                "postDtoUpdate = {}, id = {}", postUpdateDto, id);
+        return postService.update(postUpdateDto, id);
     }
 
     @GetMapping
@@ -45,10 +52,10 @@ public class PostController {
         return postService.getPosts();
     }
 
-    @DeleteMapping("/{id}/{userId}")
-    public void deletePosts(@PathVariable Long id, @PathVariable Long userId) {
-        log.debug("Получен DELETE запрос на удаление поста по id = {}, userId = {}", id, userId);
-        postService.deletePost(id, userId);
+    @DeleteMapping("/{id}")
+    public void deletePosts(@PathVariable Long id) {
+        log.debug("Получен DELETE запрос на удаление поста по id = {}", id);
+        postService.deletePost(id);
     }
 
 }

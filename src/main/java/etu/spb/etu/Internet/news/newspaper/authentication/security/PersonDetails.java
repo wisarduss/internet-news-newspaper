@@ -1,6 +1,7 @@
 package etu.spb.etu.Internet.news.newspaper.authentication.security;
 
 import etu.spb.etu.Internet.news.newspaper.user.model.User;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 @Data
+@Builder(toBuilder = true)
 public class PersonDetails implements UserDetails {
 
     private final User user;
@@ -49,5 +51,9 @@ public class PersonDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return this.user.getId();
     }
 }

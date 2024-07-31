@@ -2,8 +2,11 @@ package etu.spb.etu.Internet.news.newspaper.service;
 
 import etu.spb.etu.Internet.news.newspaper.authentication.AuthController;
 import etu.spb.etu.Internet.news.newspaper.authentication.config.JWTFilter;
+import etu.spb.etu.Internet.news.newspaper.authentication.security.PersonDetails;
 import etu.spb.etu.Internet.news.newspaper.authentication.service.AuthenticationService;
 import etu.spb.etu.Internet.news.newspaper.common.util.JWTUtil;
+import etu.spb.etu.Internet.news.newspaper.like.dto.LikeDto;
+import etu.spb.etu.Internet.news.newspaper.like.mapper.LikeMapper;
 import etu.spb.etu.Internet.news.newspaper.like.model.Like;
 import etu.spb.etu.Internet.news.newspaper.like.repository.LikeRepository;
 import etu.spb.etu.Internet.news.newspaper.like.service.LikeService;
@@ -11,11 +14,17 @@ import etu.spb.etu.Internet.news.newspaper.post.model.Post;
 import etu.spb.etu.Internet.news.newspaper.post.repository.PostRepository;
 import etu.spb.etu.Internet.news.newspaper.user.model.User;
 import etu.spb.etu.Internet.news.newspaper.user.repository.UserRepository;
+import etu.spb.etu.Internet.news.newspaper.user.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import java.util.Optional;
@@ -31,6 +40,7 @@ public class LikeServiceTest {
 
     @MockBean
     private AuthenticationService authenticationService;
+
     @MockBean
     private JWTFilter jwtFilter;
 
@@ -51,6 +61,30 @@ public class LikeServiceTest {
 
     @Autowired
     private LikeService likeService;
+
+    @Autowired
+    private UserService userService;
+
+    private User authenticatedUser;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        authenticatedUser = new User();
+        authenticatedUser.setId(1L);
+        authenticatedUser.setEmail("test@example.com");
+
+        PersonDetails personDetails = new PersonDetails(authenticatedUser);
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(personDetails);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+    }
 
     @Test
     @WithMockUser
@@ -79,50 +113,44 @@ public class LikeServiceTest {
                 .thenReturn(post);
         when(postRepository.findById(anyLong())).thenReturn(Optional.of(post));
 
-        Like like = Like.builder()
+        LikeDto likeDto = LikeDto.builder()
                 .id(1L)
-                .post(post)
-                .user(user)
+                .postId(user.getId())
+                .userId(post.getId())
                 .build();
 
         when(likeRepository.save(any()))
-                .thenReturn(like);
+                .thenReturn(LikeMapper.likeDtoToLike(likeDto,user, post));
 
-        Like result = likeRepository.save(like);
+        LikeDto result = likeService.create(likeDto);
 
-        assertThat(result).usingRecursiveComparison().isEqualTo(like);
+        assertThat(result).usingRecursiveComparison().isEqualTo(likeDto);
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(username = "test@example.com")
     void deleteLike() {
-
-        User user = User.builder()
-                .id(1L)
-                .name("test")
-                .surname("test")
-                .password("12345")
-                .email("test@test.com")
-                .build();
-
         Post post = Post.builder()
                 .id(1L)
                 .title("title")
                 .description("description")
                 .photoURL("test")
-                .userId(user.getId())
+                .userId(authenticatedUser.getId())
                 .build();
 
         Like like = Like.builder()
                 .id(1L)
                 .post(post)
-                .user(user)
+                .user(authenticatedUser)
                 .build();
 
-        when(likeRepository.findById(anyLong()))
-                .thenReturn(Optional.of(like));
+        when(userRepository.findByEmail(authenticatedUser.getEmail()))
+                .thenReturn(Optional.of(authenticatedUser));
+        when(likeRepository.findById(1L)).thenReturn(Optional.of(like));
 
-        likeService.deleteLike(1L, 1L);
-        verify(likeRepository, times(1)).deleteById(anyLong());
+        likeService.deleteLike(1L);
+
+        verify(likeRepository, times(1)).deleteById(1L);
     }
+
 }

@@ -1,6 +1,7 @@
 package etu.spb.etu.Internet.news.newspaper.common.exception;
 
 public class AlreadyExistException extends RuntimeException {
+
     public AlreadyExistException() {
         super();
     }

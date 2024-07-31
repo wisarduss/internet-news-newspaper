@@ -3,6 +3,7 @@ package etu.spb.etu.Internet.news.newspaper.service;
 
 import etu.spb.etu.Internet.news.newspaper.authentication.AuthController;
 import etu.spb.etu.Internet.news.newspaper.authentication.config.JWTFilter;
+import etu.spb.etu.Internet.news.newspaper.authentication.security.PersonDetails;
 import etu.spb.etu.Internet.news.newspaper.authentication.service.AuthenticationService;
 import etu.spb.etu.Internet.news.newspaper.comment.dto.CommentDto;
 import etu.spb.etu.Internet.news.newspaper.comment.dto.CommentUpdateDto;
@@ -20,11 +21,19 @@ import etu.spb.etu.Internet.news.newspaper.post.repository.PostRepository;
 import etu.spb.etu.Internet.news.newspaper.post.service.PostService;
 import etu.spb.etu.Internet.news.newspaper.user.model.User;
 import etu.spb.etu.Internet.news.newspaper.user.repository.UserRepository;
+import etu.spb.etu.Internet.news.newspaper.user.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -63,9 +72,32 @@ public class PostServiceTest {
     @MockBean
     private LikeRepository likeRepository;
 
-
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
+
+    private User authenticatedUser;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        authenticatedUser = new User();
+        authenticatedUser.setId(1L);
+        authenticatedUser.setEmail("test@example.com");
+
+        PersonDetails personDetails = new PersonDetails(authenticatedUser);
+
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.getPrincipal()).thenReturn(personDetails);
+
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+
+        SecurityContextHolder.setContext(securityContext);
+    }
 
 
     @Test
@@ -160,21 +192,13 @@ public class PostServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "test@example.com")
     void edit() {
-
         PostUpdateDto postUpdateDto = PostUpdateDto.builder()
                 .id(1L)
                 .title("дрель")
                 .description("description")
                 .photoURL("test")
-                .build();
-
-        User user = User.builder()
-                .id(1L)
-                .name("test")
-                .surname("test")
-                .password("12345")
-                .email("test@test.com")
                 .build();
 
 
@@ -183,15 +207,18 @@ public class PostServiceTest {
                 .title("title")
                 .description("description")
                 .photoURL("test")
-                .userId(user.getId())
+                .userId(authenticatedUser.getId())
                 .build();
+
+        when(userRepository.findByEmail(authenticatedUser.getEmail()))
+                .thenReturn(Optional.of(authenticatedUser));
 
         when(postRepository.findById(anyLong()))
                 .thenReturn(Optional.of(post));
         when(postRepository.save(any()))
                 .thenReturn(post);
 
-        PostDto result = postService.update(postUpdateDto, 1L, 1L);
+        PostDto result = postService.update(postUpdateDto, 1L);
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(postUpdateDto.getId());
         assertThat(result.getTitle()).isEqualTo(postUpdateDto.getTitle());
@@ -202,23 +229,15 @@ public class PostServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "test@example.com")
     void deletePost() {
-
-        User user = User.builder()
-                .id(1L)
-                .name("max")
-                .surname("Borodulin")
-                .email("max@mail.ru")
-                .password("12345")
-                .build();
-
         PostDto postDto = PostDto.builder()
                 .id(1L)
                 .title("test")
                 .description("test")
                 .photoURL("photoUrl")
                 .created(LocalDateTime.now())
-                .userId(1L)
+                .userId(authenticatedUser.getId())
                 .build();
 
 
@@ -227,64 +246,54 @@ public class PostServiceTest {
                 .title("test")
                 .description("test")
                 .photoURL("photoUrl")
-                .userId(1L)
+                .userId(authenticatedUser.getId())
                 .build();
 
-        when(userRepository.findById(anyLong()))
-                .thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(authenticatedUser.getEmail()))
+                .thenReturn(Optional.of(authenticatedUser));
         when(postRepository.findById(anyLong()))
                 .thenReturn(Optional.of(post));
         when(postRepository.save(any()))
                 .thenReturn(post);
 
-        postService.deletePost(1L, 1L);
+        postService.deletePost(1L);
         verify(postRepository, times(1)).findById(anyLong());
 
     }
 
     @Test
+    @WithMockUser(username = "test@example.com")
     void comment() {
-        User user = User.builder()
-                .id(1L)
-                .name("test")
-                .surname("test")
-                .password("12345")
-                .email("test@test.com")
-                .build();
-
         Post post = Post.builder()
                 .id(1L)
                 .title("title")
                 .description("description")
                 .photoURL("test")
-                .userId(user.getId())
+                .userId(authenticatedUser.getId())
                 .build();
 
         Comment comment = Comment.builder()
                 .id(1L)
                 .text("test")
-                .user(user)
+                .user(authenticatedUser)
                 .build();
 
-
+        when(userRepository.findByEmail(authenticatedUser.getEmail()))
+                .thenReturn(Optional.of(authenticatedUser));
         when(postRepository.findById(anyLong()))
                 .thenReturn(Optional.of(post));
-        when(userRepository.findById(anyLong()))
-                .thenReturn(Optional.of(user));
         when(commentRepository.save(any()))
                 .thenReturn(comment);
 
         CommentDto result = postService.makeComment(1L, CommentUpdateDto.builder()
                 .text("test")
-                .build(), 1L);
+                .build());
 
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getText()).isEqualTo("test");
-        assertThat(result.getUserName()).isEqualTo("test");
 
         verify(postRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(1)).findById(anyLong());
         verify(commentRepository, times(1)).save(any());
     }
 
@@ -300,38 +309,30 @@ public class PostServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "test@example.com")
     void deleteComment() {
-        User user = User.builder()
-                .id(1L)
-                .name("test")
-                .surname("test")
-                .password("12345")
-                .email("test@test.com")
-                .build();
-
         Post post = Post.builder()
                 .id(1L)
                 .title("title")
                 .description("description")
                 .photoURL("test")
-                .userId(user.getId())
+                .userId(authenticatedUser.getId())
                 .build();
 
         Comment comment = Comment.builder()
                 .id(1L)
                 .text("test")
-                .user(user)
+                .user(authenticatedUser)
                 .build();
 
+        when(userRepository.findByEmail(authenticatedUser.getEmail()))
+                .thenReturn(Optional.of(authenticatedUser));
         when(commentRepository.findById(anyLong()))
                 .thenReturn(Optional.of(comment));
-        when(userRepository.findById(anyLong()))
-                .thenReturn(Optional.of(user));
 
-        postService.deleteComment(1L, 1L);
+        postService.deleteComment(1L);
 
         verify(commentRepository, times(1)).findById(anyLong());
-        verify(userRepository, times(1)).findById(anyLong());
     }
 
 }

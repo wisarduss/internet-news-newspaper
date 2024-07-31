@@ -19,9 +19,11 @@ import etu.spb.etu.Internet.news.newspaper.post.model.Post;
 import etu.spb.etu.Internet.news.newspaper.post.repository.PostRepository;
 import etu.spb.etu.Internet.news.newspaper.user.model.User;
 import etu.spb.etu.Internet.news.newspaper.user.repository.UserRepository;
+import etu.spb.etu.Internet.news.newspaper.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -33,18 +35,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 public class PostServiceImpl implements PostService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final UserService userService;
 
     @Override
+    @Transactional
     public PostDto createPost(PostDto postDto) {
         Post post = PostMapper.postDtoToPost(postDto);
         userRepository.findById(post.getUserId())
                 .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + postDto.getUserId() + " не найден"));
+
         log.debug("Пост создан");
         return PostMapper.postToPostDto(postRepository.save(post));
     }
@@ -66,13 +72,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto update(PostUpdateDto postUpdateDto, Long id, Long userId) {
+    @Transactional
+    public PostDto update(PostUpdateDto postUpdateDto, Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
 
-        if (!Objects.equals(post.getUserId(), userId)) {
+        User user = userService.getAuthenticatedUser();
+
+        if (!Objects.equals(post.getUserId(), user.getId())) {
             throw new NotOwnerException("Пост может изменить владелец," +
-                    " пользователь с id = " + userId + " не является владельцем");
+                    " пользователь с id = " + user.getId() + " не является владельцем");
         }
 
         if (postUpdateDto.getTitle() != null) {
@@ -117,23 +126,26 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deletePost(Long id, Long userId) {
+    @Transactional
+    public void deletePost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
 
-        if (!Objects.equals(post.getUserId(), userId)) {
+        User user = userService.getAuthenticatedUser();
+
+        if (!Objects.equals(post.getUserId(), user.getId())) {
             throw new NotOwnerException("Только пользователь может удалить пост," +
-                    " пользователь с id =" + userId + " не является пользователем поста");
+                    " пользователь с id =" + user.getId() + " не является пользователем поста");
         }
         log.debug("Пост удален");
         postRepository.deleteById(id);
     }
 
     @Override
-    public CommentDto makeComment(Long postId, CommentUpdateDto text, Long userId) {
+    @Transactional
+    public CommentDto makeComment(Long postId, CommentUpdateDto text) {
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
+        User user = userService.getAuthenticatedUser();
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IdNotFoundException("Вещь с id = " + postId + " не найдена"));
@@ -149,15 +161,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteComment(Long commentId, Long userId) {
+    @Transactional
+    public void deleteComment(Long commentId) {
+        User user = userService.getAuthenticatedUser();
+
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IdNotFoundException("Коммент с id = " + commentId + " не найден"));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + userId + " не найден"));
-
         if (!Objects.equals(comment.getUser().getName(), user.getName())) {
-            throw new NotOwnerException("Пользователь с id = " + userId + " не является владельцем комментария," +
+            throw new NotOwnerException("Пользователь с id = " + user.getId() + " не является владельцем комментария," +
                     "комментарий может только удалить пользователь");
         }
         log.debug("комментарий удален");

@@ -45,10 +45,10 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
-    @ResponseStatus(HttpStatus.CONFLICT)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(NotOwnerException.class)
     public ErrorResponse handleValidationExceptions(NotOwnerException ex) {
-        log.debug("Получен статус 409 conflict {}", ex.getMessage());
+        log.debug("Получен статус 401 unauthorized {}", ex.getMessage());
         return new ErrorResponse(ex.getMessage());
     }
 

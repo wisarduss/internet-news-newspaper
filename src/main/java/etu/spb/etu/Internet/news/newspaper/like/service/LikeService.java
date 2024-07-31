@@ -6,6 +6,6 @@ public interface LikeService {
 
     LikeDto create(LikeDto likeDto);
 
-    void deleteLike(Long likeId, Long userId);
+    void deleteLike(Long likeId);
 
 }

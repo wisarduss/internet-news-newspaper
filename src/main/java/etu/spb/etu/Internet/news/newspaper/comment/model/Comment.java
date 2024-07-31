@@ -2,9 +2,22 @@ package etu.spb.etu.Internet.news.newspaper.comment.model;
 
 import etu.spb.etu.Internet.news.newspaper.post.model.Post;
 import etu.spb.etu.Internet.news.newspaper.user.model.User;
-import lombok.*;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import java.time.LocalDateTime;
 
 @Getter
