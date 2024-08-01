@@ -31,13 +31,15 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public LikeDto create(LikeDto likeDto) {
         User user = userRepository.findById(likeDto.getUserId())
-                .orElseThrow(() -> new IdNotFoundException("Пользователь с id= " + likeDto.getUserId() + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Пользователь с id = %d не найден", likeDto.getUserId())));
 
         Post post = postRepository.findById(likeDto.getPostId())
-                .orElseThrow(() -> new IdNotFoundException("Пост с id= " + likeDto.getPostId() + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Пост c id = %d не найден", likeDto.getPostId())));
 
         if (isExist(likeDto.getUserId(), likeDto.getPostId())) {
-            throw new AlreadyExistException("Пользователь с id= " + user.getId() + " поставил лайк");
+            throw new AlreadyExistException(String.format("Пользователь с id = %d уже поставил лайк", user.getId()));
         }
 
         Like like = Like.builder()
@@ -52,7 +54,7 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public void deleteLike(Long likeId) throws NotOwnerException {
         Like like = likeRepository.findById(likeId)
-                .orElseThrow(() -> new IdNotFoundException("Лайк c id = " + likeId + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Лайк с id = %d не найден", likeId)));
         User user = userService.getAuthenticatedUser();
 
         if (!like.getUser().equals(user)) {

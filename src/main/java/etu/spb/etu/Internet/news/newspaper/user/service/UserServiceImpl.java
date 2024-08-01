@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDto getUserById(Long id) {
         log.debug("Получен пользователь во id = {} ", id);
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + id + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Пользователь с id = %d не найден", id)));
         return UserMapper.userToUserDto(user);
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> user = userRepository.findByEmail(s);
 
         if (!user.isPresent()) {
-            throw new UsernameNotFoundException("Пользователь с email = " + s + " не найден");
+            throw new UsernameNotFoundException(String.format("Пользователь с email = %s не найден", s));
         }
 
         return new PersonDetails(user.get());

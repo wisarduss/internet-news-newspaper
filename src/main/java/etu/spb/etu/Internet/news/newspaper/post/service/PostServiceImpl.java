@@ -49,7 +49,8 @@ public class PostServiceImpl implements PostService {
     public PostDto createPost(PostDto postDto) {
         Post post = PostMapper.postDtoToPost(postDto);
         userRepository.findById(post.getUserId())
-                .orElseThrow(() -> new IdNotFoundException("Пользователь с id = " + postDto.getUserId() + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Пользователь с id = %d не найден", postDto.getUserId())));
 
         log.debug("Пост создан");
         return PostMapper.postToPostDto(postRepository.save(post));
@@ -58,7 +59,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostFullDto getById(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Пользователь с id = %d не найден", id)));
 
         List<Comment> comments = commentRepository.findAllByPostId(post.getId());
         List<CommentDto> commentsDto = comments.stream()
@@ -75,13 +76,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public PostDto update(PostUpdateDto postUpdateDto, Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Пост с id = %d не найден", id)));
 
         User user = userService.getAuthenticatedUser();
 
         if (!Objects.equals(post.getUserId(), user.getId())) {
-            throw new NotOwnerException("Пост может изменить владелец," +
-                    " пользователь с id = " + user.getId() + " не является владельцем");
+            throw new NotOwnerException("Вы не является владельцем поста, поэтому не можете изменить его!");
         }
 
         if (postUpdateDto.getTitle() != null) {
@@ -129,13 +129,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void deletePost(Long id) {
         Post post = postRepository.findById(id)
-                .orElseThrow(() -> new IdNotFoundException("Пост с id = " + id + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Пост с id = %d не найден", id)));
 
         User user = userService.getAuthenticatedUser();
 
         if (!Objects.equals(post.getUserId(), user.getId())) {
-            throw new NotOwnerException("Только пользователь может удалить пост," +
-                    " пользователь с id =" + user.getId() + " не является пользователем поста");
+            throw new NotOwnerException("Вы не являетесь пользователем поста, чтобы удалить его!");
         }
         log.debug("Пост удален");
         postRepository.deleteById(id);
@@ -148,7 +147,7 @@ public class PostServiceImpl implements PostService {
         User user = userService.getAuthenticatedUser();
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IdNotFoundException("Вещь с id = " + postId + " не найдена"));
+                .orElseThrow(() -> new IdNotFoundException(String.format("Пост с id = %d не найден", postId)));
 
 
         Comment comment = commentRepository.save(Comment.builder()
@@ -156,7 +155,7 @@ public class PostServiceImpl implements PostService {
                 .post(post)
                 .user(user)
                 .build());
-        log.debug("клмментарий оставлен");
+        log.debug("комментарий оставлен");
         return CommentMapper.commentToCommentDTO(comment);
     }
 
@@ -166,11 +165,11 @@ public class PostServiceImpl implements PostService {
         User user = userService.getAuthenticatedUser();
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IdNotFoundException("Коммент с id = " + commentId + " не найден"));
+                .orElseThrow(() -> new IdNotFoundException(
+                        String.format("Комментарий с id = %d не найден", commentId)));
 
         if (!Objects.equals(comment.getUser().getName(), user.getName())) {
-            throw new NotOwnerException("Пользователь с id = " + user.getId() + " не является владельцем комментария," +
-                    "комментарий может только удалить пользователь");
+            throw new NotOwnerException("Вы не можеет удалить не свой комментарий");
         }
         log.debug("комментарий удален");
         commentRepository.deleteById(commentId);
